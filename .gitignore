@@ -1,3 +1,10 @@
 .vscode/
 *.pyc
 notes/
+fstore/
+__pycache__/
+.ipynb_checkpoints/
+*/__pycache__/
+*.pyc
+*.egg-info/
+*.egg
