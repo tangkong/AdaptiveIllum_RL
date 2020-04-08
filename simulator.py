@@ -17,7 +17,7 @@ import torch
 class SpectraSimulator(gym.Env):
     def __init__(self, sp, n_classes=5, meas_cost=1, boundary_obj=True, test_data=None, cell_size=4.5):
         
-        self.cell_size = cell_size # constant for now
+        self.cell_size = cell_size 
         self.boundary_obj = boundary_obj
                
         self.n_classes = n_classes
@@ -46,10 +46,9 @@ class SpectraSimulator(gym.Env):
 #         self.high2 = self.high2.flatten()
 #         self.action_space = spaces.Box(low=self.low2, high=self.high2, dtype=float)
         
-#         self.num_envs = 1 # what does this do??
+#         self.num_envs = 1 # what does this do?
    
     def setup_positions(self, sp):  
-#         path177 = Path.cwd() / 'positions' / '177.csv'
         path177 = Path(sp) / 'positions' / '177.csv'
         locdf = pd.read_csv(path177)
         locdf = locdf.rename(columns={'Plate Y': 'Y', 'Plate X': 'X'}) 
@@ -263,8 +262,8 @@ def simulator(w, id_num=0, args={}, visual=False, plot_all=False, reward_type=1,
     nn = args["nn"]
     n_classes = args["n_classes"]
     cell_size = args["cell_size"]
+    sp = args["sp"]
     
-    sp = '/home/jbetterton/projects/adapt_illum_2/AdaptiveIllum_RL'
     env = SpectraSimulator(sp=sp, meas_cost=meas_cost, n_classes=n_classes, test_data=data, cell_size=cell_size)
 
     done = False
