@@ -253,7 +253,8 @@ def comparison_plot(x, y, truth, pred, measured):
     plt.show()
     
     
-def simulator(w, id_num=0, args={}, visual=False, plot_all=False, reward_type=1, data=None): # change default args later
+def simulator(w, id_num=0, args={}, visual=False, plot_all=False, 
+                reward_type=1, data=None): # change default args later
     # unpack args
     if reward_type == 0:
         meas_cost = args["meas_cost"]
@@ -264,7 +265,8 @@ def simulator(w, id_num=0, args={}, visual=False, plot_all=False, reward_type=1,
     cell_size = args["cell_size"]
     sp = args["sp"]
     
-    env = SpectraSimulator(sp=sp, meas_cost=meas_cost, n_classes=n_classes, test_data=data, cell_size=cell_size)
+    env = SpectraSimulator(sp=sp, meas_cost=meas_cost, n_classes=n_classes, 
+                            test_data=data, cell_size=cell_size)
 
     done = False
     obs = env.reset()
@@ -347,3 +349,27 @@ def gen_vornoi_classes(x, y, n_classes):
         classes[i] = np.argmin(dists)# point it is closest to floored
 
     return classes, vpoints
+
+def gen_wafer_locs(shape='circle', radius=10):
+    """
+    Create square grid of locations, with spacing of 1 between
+    dro
+    return lists of x, y locations
+    """
+    vals = np.arange(-radius, radius+1, 1)
+
+    xv, yv = np.meshgrid(vals, vals)
+
+    x = xv.flatten()
+    y = yv.flatten()
+    if shape == 'circle':
+        xout = [] #np.array([])
+        yout = [] # np.array([])
+        for i in range(len(x)):
+            if (x[i]**2 + y[i]**2) <= radius**2:
+                xout.append(x[i])
+                yout.append(y[i])
+        
+        return xout, yout
+    else:
+        return x, y
