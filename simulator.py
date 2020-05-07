@@ -373,3 +373,42 @@ def gen_wafer_locs(shape='circle', radius=10):
         return xout, yout
     else:
         return x, y
+
+def gen_class_data(locdf, noise_mult=0.05):
+    """gen_class_data generates XAS spectra based on classes defined in locdf
+
+    Currently very hard coded for the data structure in RL, could think of a better 
+    way in the future
+
+    :param locdf: dataset with 'class' column. 
+    :type locdf: Pandas DataFrame
+    """
+
+    sp = 'C:\\Users\\roberttk\\Desktop\\SLAC_RA\\RL_AdaptiveIllumination\\RL_AI_code\\spectra'
+    sl = list(Path(sp).glob('*.mat'))
+
+    x1 = loadmat(sl[0])
+    data = x1['Fe_normMaster1']
+
+    locdf['data'] = ''
+    cls_list = locdf['class'].unique()
+    
+    # sample without replacement to choose spectra to use
+    spec_classes = np.random.choice(np.arange(118), size=len(cls_list), 
+                                    replace=False)
+
+    for i in range(len(locdf)):
+        # generate normal noise with shape of data
+        noise = np.random.normal(size=len(data[:,1]))
+
+        # grab corresponding class
+        cls_ind = np.where(cls_list == locdf['class'][i])
+        specNo = spec_classes[cls_ind]
+
+        # Add noise with magnitude 0.05 to the chosen class
+        noised = data[:,specNo] + noise*noise_mult
+        locdf['data'][i] = np.array([data[:,0], noised])
+
+    # no need to return locdf, since "object references passed by value" and 
+    # operating on reference locdf mutes the original dataframe
+
